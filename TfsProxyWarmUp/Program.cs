@@ -9,13 +9,30 @@ namespace TfsProxyWarmUp
     {
         static void Main(string[] args)
         {
+            // Reading command-line arguments
+
             var options = new Options();
 
-            if (CommandLine.Parser.Default.ParseArguments(args, options))
+            if (!CommandLine.Parser.Default.ParseArguments(args, options))
             {
-                var warmUp = new ProjectCollectionWarmUp(options.ProjectCollectionUrl, options.ProxyUrl, new[] { options.ItemSpec });
-                warmUp.Run();
+                Environment.ExitCode = 2;
+                return;
             }
+            else if (options.ItemSpecs.Count == 0)
+            {
+                Console.WriteLine(options.Usage());
+
+                Console.WriteLine("You should specify at least one ItemSpec.");
+                Console.WriteLine();
+                
+                Environment.ExitCode = 2;
+                return;
+            }
+
+            // Performing warm up
+
+            var warmUp = new ProjectCollectionWarmUp(options.ProjectCollectionUrl, options.ProxyUrl, options.ItemSpecs);
+            warmUp.Run();
         }
     }
 }

@@ -13,11 +13,11 @@ namespace TfsProxyWarmUp
         private readonly string _projectCollectionUrl;
         private readonly string _proxyUrl;
 
-        private readonly string[] _itemSpecs;
+        private readonly List<string> _itemSpecs;
 
         private readonly HashSet<int> _alreadyDownloadedFileIds = new HashSet<int>();
 
-        public ProjectCollectionWarmUp(string projectCollectionUrl, string proxyUrl, string[] itemSpecs)
+        public ProjectCollectionWarmUp(string projectCollectionUrl, string proxyUrl, List<string> itemSpecs)
         {
             if (string.IsNullOrEmpty(projectCollectionUrl))
                 throw new ArgumentNullException("projectCollectionUrl");
