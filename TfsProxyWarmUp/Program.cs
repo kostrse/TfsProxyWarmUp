@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NLog;
+using TfsProxyWarmUp.WarmUp;
 
 namespace TfsProxyWarmUp
 {
@@ -21,12 +22,30 @@ namespace TfsProxyWarmUp
                 Environment.ExitCode = 2;
                 return;
             }
-            else if (options.ItemSpecs.Count == 0)
-            {
-                Console.WriteLine(options.Usage());
 
-                Console.WriteLine("You should specify at least one ItemSpec.");
-                Console.WriteLine();
+            // Reading settings (given via command-line or configuration file)
+
+            List<WarmUpContext> contexts;
+
+            try
+            {
+                if (options.UseConfig)
+                {
+                    // Taking parameters from configuration file
+
+                    contexts = ConfigContextReader.Read();
+                }
+                else
+                {
+                    // Taking parameters from command-line
+
+                    contexts = CommandLineContextReader.Read(options);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Application settings are incorrect.");
+                Console.WriteLine(ex.Message);
 
                 Environment.ExitCode = 2;
                 return;
@@ -38,8 +57,10 @@ namespace TfsProxyWarmUp
             {
                 _logger.Info("Starting warm up...");
 
-                var warmUp = new ProjectCollectionWarmUp(options.ProjectCollectionUrl, options.ProxyUrl, options.ItemSpecs);
-                warmUp.Run();
+                foreach (var context in contexts)
+                {
+                    new ProjectCollectionWarmUp(context).Run();
+                }
 
                 _logger.Info("Done.");
             }
@@ -48,8 +69,6 @@ namespace TfsProxyWarmUp
                 _logger.ErrorException(string.Format("The program failed with error: {0}", ex.Message), ex);
                 Environment.ExitCode = 1;
             }
-
-            Console.ReadKey();
         }
     }
 }

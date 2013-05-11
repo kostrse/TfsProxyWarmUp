@@ -9,10 +9,13 @@ namespace TfsProxyWarmUp
 {
     public class Options
     {
-        [Option('c', "collection", Required = true, HelpText = "TFS project collection URL.")]
+        [Option("useconfig", HelpText = "Run warm up using conifiguration from file.", MutuallyExclusiveSet = "сonfig")]
+        public bool UseConfig { get; set; }
+
+        [Option('c', "collection", HelpText = "TFS project collection URL (if not useconfig).", MutuallyExclusiveSet = "cmd")]
         public string ProjectCollectionUrl { get; set; }
 
-        [Option('p', "proxy", Required = true, HelpText = "TFS Proxy server URL.")]
+        [Option('p', "proxy", HelpText = "TFS Proxy server URL (if not useconfig).", MutuallyExclusiveSet = "cmd")]
         public string ProxyUrl { get; set; }
 
         [ValueList(typeof(List<string>))]
@@ -24,6 +27,7 @@ namespace TfsProxyWarmUp
             var usage = HelpText.AutoBuild(this);
 
             usage.AddPreOptionsLine("Usage:");
+            usage.AddPreOptionsLine("tfsproxywarmup --useconfig");
             usage.AddPreOptionsLine("tfsproxywarmup -c=collectionUrl -p=proxyUrl itemSpec1 [itemSpec2 ...]");
 
             usage.AddPostOptionsLine("Example:");

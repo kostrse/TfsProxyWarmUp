@@ -6,8 +6,9 @@ using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Framework.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using NLog;
+using TfsProxyWarmUp.Tfs;
 
-namespace TfsProxyWarmUp
+namespace TfsProxyWarmUp.WarmUp
 {
     public class ProjectCollectionWarmUp
     {
@@ -15,33 +16,20 @@ namespace TfsProxyWarmUp
 
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
-        private readonly string _projectCollectionUrl;
-        private readonly string _proxyUrl;
-
-        private readonly List<string> _itemSpecs;
-
+        private readonly WarmUpContext _context;
         private readonly HashSet<int> _alreadyDownloadedFileIds = new HashSet<int>();
 
-        public ProjectCollectionWarmUp(string projectCollectionUrl, string proxyUrl, List<string> itemSpecs)
+        public ProjectCollectionWarmUp(WarmUpContext context)
         {
-            if (string.IsNullOrEmpty(projectCollectionUrl))
-                throw new ArgumentNullException("projectCollectionUrl");
+            if (context == null)
+                throw new ArgumentNullException("context");
 
-            if (string.IsNullOrEmpty(proxyUrl))
-                throw new ArgumentNullException("proxyUrl");
-
-            if (itemSpecs == null)
-                throw new ArgumentNullException("itemSpecs");
-
-            _projectCollectionUrl = projectCollectionUrl;
-            _proxyUrl = proxyUrl;
-
-            _itemSpecs = itemSpecs;
+            _context = context;
         }
 
         public void Run()
         {
-            _logger.Info("Starting for Project Collection: {0}", _projectCollectionUrl);
+            _logger.Info("Starting for Project Collection: {0}", _context.ProjectCollectionUrl);
 
             try
             {
@@ -49,15 +37,15 @@ namespace TfsProxyWarmUp
 
                 // Setting TFS Proxy URL environment variable on the process level
 
-                _logger.Info("Configuring connection via TFS Proxy: {0}", _proxyUrl);
+                _logger.Info("Configuring connection via TFS Proxy: {0}", _context.ProxyUrl);
 
-                Environment.SetEnvironmentVariable("TFSPROXY", _proxyUrl);
+                Environment.SetEnvironmentVariable("TFSPROXY", _context.ProxyUrl.AbsoluteUri);
 
                 // Initializing connection to TFS Project Collection by given URL
 
                 _logger.Info("Connecting to TFS...");
 
-                TfsTeamProjectCollection projectCollection = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(new Uri(_projectCollectionUrl));
+                TfsTeamProjectCollection projectCollection = TfsTeamProjectCollectionFactory.GetTeamProjectCollection(_context.ProjectCollectionUrl);
 
                 projectCollection.Connect(ConnectOptions.IncludeServices);
 
@@ -65,7 +53,7 @@ namespace TfsProxyWarmUp
 
                 // Processing ItemSpecs
 
-                foreach (string itemSpec in _itemSpecs)
+                foreach (string itemSpec in _context.ItemSpecs)
                 {
                     RunForItemSpec(versionControl, itemSpec);
                 }
