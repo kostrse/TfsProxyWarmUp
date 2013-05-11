@@ -10,3 +10,8 @@ The application doesn't require configuration of any TFS workspaces and even doe
 to a local drive, so it can be easily configured as a daily batch job on server or a developer's workstation
 using Windows Task Scheduler.
 
+Documentation
+==
+
+Documentation how to configure and use the application can be found at the
+[project wiki](https://github.com/kostrse/TfsProxyWarmUp/wiki).
