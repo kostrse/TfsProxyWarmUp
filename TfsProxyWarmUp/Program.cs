@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 
 namespace TfsProxyWarmUp
 {
     class Program
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
         static void Main(string[] args)
         {
             // Reading command-line arguments
@@ -24,15 +27,29 @@ namespace TfsProxyWarmUp
 
                 Console.WriteLine("You should specify at least one ItemSpec.");
                 Console.WriteLine();
-                
+
                 Environment.ExitCode = 2;
                 return;
             }
 
             // Performing warm up
 
-            var warmUp = new ProjectCollectionWarmUp(options.ProjectCollectionUrl, options.ProxyUrl, options.ItemSpecs);
-            warmUp.Run();
+            try
+            {
+                _logger.Info("Starting warm up...");
+
+                var warmUp = new ProjectCollectionWarmUp(options.ProjectCollectionUrl, options.ProxyUrl, options.ItemSpecs);
+                warmUp.Run();
+
+                _logger.Info("Done.");
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorException(string.Format("The program failed with error: {0}", ex.Message), ex);
+                Environment.ExitCode = 1;
+            }
+
+            Console.ReadKey();
         }
     }
 }

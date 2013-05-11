@@ -21,7 +21,7 @@ namespace TfsProxyWarmUp
             string downloadUrl = item.DownloadUrl;
 
             if (string.IsNullOrEmpty(downloadUrl))
-                throw new InvalidOperationException("The item should contain DownloadUrl initialized.");
+                throw new InvalidOperationException("The item should have DownloadUrl initialized.");
 
             // Extracting FileId from DownloadUrl
 
@@ -44,13 +44,13 @@ namespace TfsProxyWarmUp
                 int fidStartIndex = downloadUrl.IndexOf(fid, StringComparison.Ordinal);
 
                 if (fidStartIndex < 0)
-                    throw new InvalidOperationException("The item DownloadUrl doesn't contain FileId.");
+                    throw new InvalidOperationException("DownloadUrl doesn't contain FileId.");
 
                 startIndex = fidStartIndex + fid.Length;
             }
 
             if (startIndex == downloadUrl.Length)
-                throw new InvalidOperationException("The item DownloadUrl doesn't contain FileId.");
+                throw new InvalidOperationException("DownloadUrl doesn't contain FileId.");
 
             int endIndex = downloadUrl.IndexOf('&', startIndex);
 
@@ -60,7 +60,7 @@ namespace TfsProxyWarmUp
             string fileIdStr = downloadUrl.Substring(startIndex, endIndex - startIndex);
             
             if (string.IsNullOrEmpty(fileIdStr) || !int.TryParse(fileIdStr, out fileId))
-                throw new InvalidOperationException("The item DownloadUrl doesn't contain FileId.");
+                throw new InvalidOperationException("DownloadUrl doesn't contain FileId.");
 
             return fileId;
         }
