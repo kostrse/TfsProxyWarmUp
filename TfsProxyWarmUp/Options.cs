@@ -9,7 +9,7 @@ namespace TfsProxyWarmUp
 {
     public class Options
     {
-        [Option("useconfig", HelpText = "Run warm up using conifiguration from file.", MutuallyExclusiveSet = "сonfig")]
+        [Option("useconfig", HelpText = "Run warm up using configuration from file.", MutuallyExclusiveSet = "сonfig")]
         public bool UseConfig { get; set; }
 
         [Option('c', "collection", HelpText = "TFS project collection URL (if not useconfig).", MutuallyExclusiveSet = "cmd")]
