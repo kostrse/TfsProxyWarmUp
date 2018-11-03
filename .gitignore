@@ -11,3 +11,5 @@ TestResults/
 # NuGet Packages Directory
 packages/*
 !repositories.config
+/.vs/*
+

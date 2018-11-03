@@ -9,7 +9,7 @@ namespace TfsProxyWarmUp
 {
     public class Options
     {
-        [Option("useconfig", HelpText = "Run warm up using conifiguration from file.", MutuallyExclusiveSet = "сonfig")]
+        [Option("useconfig", HelpText = "Run warm up using configuration from file.", MutuallyExclusiveSet = "сonfig")]
         public bool UseConfig { get; set; }
 
         [Option('c', "collection", HelpText = "TFS project collection URL (if not useconfig).", MutuallyExclusiveSet = "cmd")]
@@ -28,10 +28,10 @@ namespace TfsProxyWarmUp
 
             usage.AddPreOptionsLine("Usage:");
             usage.AddPreOptionsLine("tfsproxywarmup --useconfig");
-            usage.AddPreOptionsLine("tfsproxywarmup -c=collectionUrl -p=proxyUrl itemSpec1 [itemSpec2 ...]");
+            usage.AddPreOptionsLine("tfsproxywarmup -c collectionUrl -p proxyUrl itemSpec1 [itemSpec2 ...]");
 
             usage.AddPostOptionsLine("Example:");
-            usage.AddPostOptionsLine("tfsproxywarmup -c=http://tfsserver:8080/tfs/DefaultCollection -p=http://tfsproxy:8081/ $/Project1/MAIN $/Project1/RELEASE/1.1");
+            usage.AddPostOptionsLine("tfsproxywarmup -c http://tfsserver:8080/tfs/DefaultCollection -p http://tfsproxy:8081/ $/Project1/MAIN $/Project1/RELEASE/1.1");
             usage.AddPostOptionsLine(string.Empty);
             usage.AddPostOptionsLine(string.Empty);
 
