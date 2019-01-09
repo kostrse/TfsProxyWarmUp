@@ -66,7 +66,7 @@ namespace TfsProxyWarmUp
             }
             catch (Exception ex)
             {
-                _logger.ErrorException(string.Format("The program failed with error: {0}", ex.Message), ex);
+                _logger.Error(ex, string.Format("The program failed with error: {0}", ex.Message));
                 Environment.ExitCode = 1;
             }
         }

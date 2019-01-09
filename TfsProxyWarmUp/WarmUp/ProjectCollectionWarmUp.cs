@@ -67,7 +67,7 @@ namespace TfsProxyWarmUp.WarmUp
             }
             catch (Exception ex)
             {
-                _logger.ErrorException(string.Format("Warm up for the Project Collection failed with error: {0}", ex.Message), ex);
+                _logger.Error(ex, string.Format("Warm up for the Project Collection failed with error: {0}", ex.Message));
             }
         }
 
@@ -126,7 +126,7 @@ namespace TfsProxyWarmUp.WarmUp
                     }
                     catch (Exception ex)
                     {
-                        _logger.WarnException(string.Format("Failed to process item: {0}:{1}", item.ServerItem, item.ChangesetId), ex);
+                        _logger.Warn(ex, string.Format("Failed to process item: {0}:{1}", item.ServerItem, item.ChangesetId));
                     }
                 }
 
@@ -139,7 +139,7 @@ namespace TfsProxyWarmUp.WarmUp
             }
             catch (Exception ex)
             {
-                _logger.ErrorException(string.Format("Warm up for the ItemSpec failed with error: {0}", ex.Message), ex);
+                _logger.Error(ex, string.Format("Warm up for the ItemSpec failed with error: {0}", ex.Message));
             }
         }
     }
